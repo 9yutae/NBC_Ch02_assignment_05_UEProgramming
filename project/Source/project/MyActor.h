@@ -11,10 +11,15 @@ class PROJECT_API AMyActor : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
+private:	
 	// Sets default values for this actor's properties
 	AMyActor();
+
+	// Initialize the Actor's Location
 	FVector2D start;
+
+	// The Actor's Current Location
+	FVector2D currentLocation;
 
 protected:
 	// Called when the game starts or when spawned
@@ -24,7 +29,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
+	// Move 10 times using step()
 	virtual void move();
+
+	// Get 0 or 1 Randomly
 	virtual int32 step();
 
 };
