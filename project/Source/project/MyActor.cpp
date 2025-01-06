@@ -26,6 +26,7 @@ void AMyActor::BeginPlay()
 	move();
 	// print Log(After Movements)
 	UE_LOG(LogTemp, Log, TEXT("Last Actor location : %s"), *currentLocation.ToString());
+	UE_LOG(LogTemp, Display, TEXT("Total Move Distance : %s"), *FString::SanitizeFloat(distance(start, currentLocation)));
 }
 
 // Called every frame
@@ -41,11 +42,34 @@ void AMyActor::move() {
 
 	// Move Actor 10 times
 	for (int32 i = 0;i < MaxMoveCount; i++) {
-		currentLocation = FVector2D(currentLocation.X + step(), currentLocation.Y + step());  // Move Randomly using step() function
-		UE_LOG(LogTemp, Warning, TEXT("%s. Current Location : %s"), *FString::FromInt(i+1),*currentLocation.ToString());  // print Log after every movements
+		FVector2D nextLocation = FVector2D(currentLocation.X + step(), currentLocation.Y + step());  // Move Randomly using step() function
+		UE_LOG(LogTemp, Warning, TEXT("%s. Current Location : %s"), *FString::FromInt(i+1),*nextLocation.ToString());  // print Log after every movements
+		UE_LOG(LogTemp, Display, TEXT("Recent Move Distance : %s"), *FString::SanitizeFloat(distance(currentLocation, nextLocation)));
+		createEvent();
+		currentLocation = nextLocation;
 	}
 }
 
 int32 AMyActor::step() {
 	return FMath::RandRange(0, 1);  // Return 0 or 1 randomly
+}
+
+// Calculate the distance of two Locations
+float AMyActor::distance(FVector2D first, FVector2D second) {
+	float dx = second.X - first.X;
+	float dy = second.Y - first.Y;
+	return FMath::Sqrt(dx * dx + dy * dy);
+}
+
+// Create Random Event
+void AMyActor::createEvent() {
+	int32 randomValue = FMath::RandRange(1, 100);
+	const int32 probability = 50;
+	if (randomValue > 50) {
+		UE_LOG(LogTemp, Log, TEXT("Event Triggered!"));
+		eventCount++;
+	}
+	else {
+		UE_LOG(LogTemp, Log, TEXT("Event Not Triggered!"));
+	}
 }

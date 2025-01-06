@@ -12,20 +12,26 @@ class PROJECT_API AMyActor : public AActor
 	GENERATED_BODY()
 	
 private:	
-	// Sets default values for this actor's properties
-	AMyActor();
-
 	// Initialize the Actor's Location
 	FVector2D start;
 
 	// The Actor's Current Location
 	FVector2D currentLocation;
 
+	// The number of Event Occurrences
+	int32 eventCount;
+
+	// Total Distance
+	float totalDistance;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
+	// Sets default values for this actor's properties
+	AMyActor();
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
@@ -35,4 +41,9 @@ public:
 	// Get 0 or 1 Randomly
 	virtual int32 step();
 
+	// Calculate Distance of two Positions
+	float distance(FVector2D first, FVector2D second);
+	
+	// Create Random Event
+	void createEvent();
 };
