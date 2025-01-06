@@ -1,0 +1,10 @@
+.vs
+Binaries/
+Confiig/
+Content/
+DerivedDataCache/
+Intermediate/
+Saved/
+
+!MyActor.h
+!MyActor.cpp
