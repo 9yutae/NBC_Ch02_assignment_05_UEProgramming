@@ -13,10 +13,10 @@ class PROJECT_API AMyActor : public AActor
 	
 private:	
 	// Initialize the Actor's Location
-	FVector2D start;
+	// FVector2D start;
 
 	// The Actor's Current Location
-	FVector2D currentLocation;
+	TArray<FVector2D> coordinateArray;
 
 	// The number of Event Occurrences
 	int32 eventCount;

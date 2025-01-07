@@ -10,9 +10,9 @@ AMyActor::AMyActor()
 	PrimaryActorTick.bCanEverTick = true;
 	
 	// Initialize the Actor's Location
-	start = FVector2D(0, 0);
-	// Get Current Location
-	currentLocation = start;
+	coordinateArray.Add(FVector2D(0, 0));
+	eventCount = 0;
+	totalDistance = 0.0f;
 }
 
 // Called when the game starts or when spawned
@@ -21,12 +21,14 @@ void AMyActor::BeginPlay()
 	Super::BeginPlay();
 
 	// print Log(Initial Location)
-	UE_LOG(LogTemp, Log, TEXT("Actor location Initialize : %s"), *start.ToString());
+	UE_LOG(LogTemp, Log, TEXT("Actor location Initialize : %s"), *coordinateArray[0].ToString());
+	
 	// Move 10 times
 	move();
+
 	// print Log(After Movements)
-	UE_LOG(LogTemp, Log, TEXT("Last Actor location : %s"), *currentLocation.ToString());
-	UE_LOG(LogTemp, Display, TEXT("Total Move Distance : %s"), *FString::SanitizeFloat(distance(start, currentLocation)));
+	UE_LOG(LogTemp, Log, TEXT("Last Actor location : %s"), *coordinateArray.Top().ToString());
+	UE_LOG(LogTemp, Display, TEXT("Total Move Distance : %s"), *FString::SanitizeFloat(distance(coordinateArray[0], coordinateArray.Top())));
 }
 
 // Called every frame
@@ -41,12 +43,15 @@ void AMyActor::move() {
 	int32 MaxMoveCount = 10;
 
 	// Move Actor 10 times
-	for (int32 i = 0;i < MaxMoveCount; i++) {
+	for (int32 i = 1;i <= MaxMoveCount; i++) {
+		FVector2D currentLocation = coordinateArray[i - 1];
 		FVector2D nextLocation = FVector2D(currentLocation.X + step(), currentLocation.Y + step());  // Move Randomly using step() function
-		UE_LOG(LogTemp, Warning, TEXT("%s. Current Location : %s"), *FString::FromInt(i+1),*nextLocation.ToString());  // print Log after every movements
+		coordinateArray.Add(nextLocation);
+
+		UE_LOG(LogTemp, Warning, TEXT("%s. Current Location : %s"), *FString::FromInt(i),*nextLocation.ToString());  // print Log after every movements
 		UE_LOG(LogTemp, Display, TEXT("Recent Move Distance : %s"), *FString::SanitizeFloat(distance(currentLocation, nextLocation)));
+		
 		createEvent();
-		currentLocation = nextLocation;
 	}
 }
 
