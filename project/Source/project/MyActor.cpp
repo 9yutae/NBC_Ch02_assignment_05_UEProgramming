@@ -34,15 +34,15 @@ AMyActor::AMyActor()
 }
 
 // Called when the game starts or when spawned
-void AMyActor::BeginPlay()
+void AMyActor::BeginPlay()	
 {
 	Super::BeginPlay();
 
 	// print Log(Initial Location)
 	UE_LOG(LogTemp, Log, TEXT("Actor location Initialize : %s"), *coordinateArray[0].ToString());
 	
-	// Move 10 times
-	move();
+	// SetTimer를 이용하여 0.5초 간격으로 move 실행
+	GetWorldTimerManager().SetTimer(MyTimerHandle, this, &AMyActor::move, 0.50f, true);
 
 	// print Log(After Movements)
 	UE_LOG(LogTemp, Log, TEXT("Last Actor location : %s"), *coordinateArray.Top().ToString());
@@ -57,22 +57,24 @@ void AMyActor::Tick(float DeltaTime)
 }
 
 void AMyActor::move() {
-	// Maximum Movement Count
-	int32 MaxMoveCount = 10;
-
-	// Move Actor 10 times
-	for (int32 i = 1;i <= MaxMoveCount; i++) {
-		FVector2D currentLocation = coordinateArray[i - 1];
-		FVector2D nextLocation = FVector2D(currentLocation.X + step(), currentLocation.Y + step());  // Move Randomly using step() function
-
-		SetActorLocation(FVector(nextLocation, 0));
-		coordinateArray.Add(nextLocation);
-
-		UE_LOG(LogTemp, Warning, TEXT("%s. Current Location : %s"), *FString::FromInt(i),*nextLocation.ToString());  // print Log after every movements
-		UE_LOG(LogTemp, Display, TEXT("Recent Move Distance : %s"), *FString::SanitizeFloat(distance(currentLocation, nextLocation)));
-		
-		createEvent();
+	// MovementCount 변수를 사용하여 총 10회 이동하도록 설정
+	if (--MovementCount <= 0) {
+		GetWorldTimerManager().ClearTimer(MyTimerHandle);
 	}
+
+	// 이동할 좌표 설정
+	FVector2D currentLocation = coordinateArray.Top();
+	FVector2D nextLocation = FVector2D(currentLocation.X + step(), currentLocation.Y + step());  // Move Randomly using step() function
+
+	// 이동
+	SetActorLocation(FVector(nextLocation, 0));
+	coordinateArray.Add(nextLocation);
+
+	// 로그 출력
+	UE_LOG(LogTemp, Warning, TEXT("%s. Current Location : %s"), *FString::FromInt(10-MovementCount), *nextLocation.ToString());  // print Log after every movements
+	UE_LOG(LogTemp, Display, TEXT("Recent Move Distance : %s"), *FString::SanitizeFloat(distance(currentLocation, nextLocation)));
+
+	createEvent();
 }
 
 int32 AMyActor::step() {
@@ -98,3 +100,24 @@ void AMyActor::createEvent() {
 		UE_LOG(LogTemp, Log, TEXT("Event Not Triggered!"));
 	}
 }
+
+/*
+void AMyActor::move() {
+	// Maximum Movement Count
+	int32 MaxMoveCount = 10;
+
+	// Move Actor 10 times
+	for (int32 i = 1;i <= MaxMoveCount; i++) {
+		FVector2D currentLocation = coordinateArray[i - 1];
+		FVector2D nextLocation = FVector2D(currentLocation.X + step(), currentLocation.Y + step());  // Move Randomly using step() function
+
+		SetActorLocation(FVector(nextLocation, 0));
+		coordinateArray.Add(nextLocation);
+
+		UE_LOG(LogTemp, Warning, TEXT("%s. Current Location : %s"), *FString::FromInt(i),*nextLocation.ToString());  // print Log after every movements
+		UE_LOG(LogTemp, Display, TEXT("Recent Move Distance : %s"), *FString::SanitizeFloat(distance(currentLocation, nextLocation)));
+
+		createEvent();
+	}
+}
+*/
