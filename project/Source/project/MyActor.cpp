@@ -9,7 +9,8 @@ AMyActor::AMyActor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Initialize the Actor's Location
+	// Initialize the Actor's Location and properties
+	SetActorLocation(FVector(0, 0, 0));
 	coordinateArray.Add(FVector2D(0, 0));
 	eventCount = 0;
 	totalDistance = 0.0f;
@@ -63,6 +64,8 @@ void AMyActor::move() {
 	for (int32 i = 1;i <= MaxMoveCount; i++) {
 		FVector2D currentLocation = coordinateArray[i - 1];
 		FVector2D nextLocation = FVector2D(currentLocation.X + step(), currentLocation.Y + step());  // Move Randomly using step() function
+
+		SetActorLocation(FVector(nextLocation, 0));
 		coordinateArray.Add(nextLocation);
 
 		UE_LOG(LogTemp, Warning, TEXT("%s. Current Location : %s"), *FString::FromInt(i),*nextLocation.ToString());  // print Log after every movements
@@ -73,7 +76,7 @@ void AMyActor::move() {
 }
 
 int32 AMyActor::step() {
-	return FMath::RandRange(0, 1);  // Return 0 or 1 randomly
+	return FMath::RandRange(0, 1) * 100;  // Return 0 or 1 randomly
 }
 
 // Calculate the distance of two Locations

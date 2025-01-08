@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "CoreMinimal.h" // 클래스 템플릿의 기본 헤더 CoreMinimal.h로 변경
 #include "GameFramework/Actor.h"
 #include "MyActor.generated.h"
 
@@ -16,6 +16,7 @@ private:
 	// FVector2D start;
 
 	// The Actor's Current Location
+	UPROPERTY(VisibleAnywhere, Category=MyValue)
 	TArray<FVector2D> coordinateArray;
 
 	// The number of Event Occurrences
