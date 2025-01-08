@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "MyActor.h"
@@ -8,11 +8,28 @@ AMyActor::AMyActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	// Initialize the Actor's Location
 	coordinateArray.Add(FVector2D(0, 0));
 	eventCount = 0;
 	totalDistance = 0.0f;
+
+
+	// 클래스의 생성자(Constructor)에서 컴포넌트 생성
+	Body = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Body"));
+	
+	// 에셋 지정
+	// 에셋의 키 값을 FObjectFinder 변수로 전달해 해당 에셋의 포인터를 가져옴
+	// 게임 도중 에셋의 경로가 변경될 일 없으므로 static으로 선언
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>
+		SM_BODY(TEXT("/Script/Engine.StaticMesh'/Game/StarterContent/Props/SM_Statue.SM_Statue'"));
+
+	// SetStaticMesh 함수에 SM_BODY 포인터 전달
+	if (SM_BODY.Succeeded())
+	{
+		Body->SetStaticMesh(SM_BODY.Object);
+	}
+
 }
 
 // Called when the game starts or when spawned

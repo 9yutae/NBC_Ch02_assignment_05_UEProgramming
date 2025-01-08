@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -6,10 +6,10 @@
 #include "GameFramework/Actor.h"
 #include "MyActor.generated.h"
 
-UCLASS()
+UCLASS() // 클래스 선언 매크로
 class PROJECT_API AMyActor : public AActor
 {
-	GENERATED_BODY()
+	GENERATED_BODY()	// 클래스 선언 매크로
 	
 private:	
 	// Initialize the Actor's Location
@@ -46,4 +46,12 @@ public:
 	
 	// Create Random Event
 	void createEvent();
+
+	// 포인터 변수로 MyActor 선언
+	UPROPERTY(VisibleAnywhere)  // 언리얼 실행 환경이 객체를 자동으로 관리하도록 매크로 선언, VisibleAnywher = 속성값 확인 가능
+	UStaticMeshComponent* Body;
+
+	UPROPERTY(EditAnywhere, Category=ID)
+	int32 ID;
+
 };
